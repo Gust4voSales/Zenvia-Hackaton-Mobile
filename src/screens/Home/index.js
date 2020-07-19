@@ -11,6 +11,8 @@ export default function Home({ navigation }) {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
 
     useEffect(() => {
         loadBooks();
@@ -20,9 +22,9 @@ export default function Home({ navigation }) {
         try {
             setLoading(true)
             const res = await api.get('/livros/count');
+
             let bookCounter = parseInt(res.data.count);
             setTotalPage(Math.ceil(bookCounter/limit));
-            console.log(Math.ceil(bookCounter/limit));
 
             const { data } = await api.get(`/livros`, { params: {
                 filter: { 
@@ -31,14 +33,32 @@ export default function Home({ navigation }) {
                 }
             }});
             
-            setBooks([...books, ...data]);
+            if (page===1) {
+                setBooks(data);
+            } else {
+                setBooks([...books, ...data]);
+            }
+            setRefreshing(false);
             setLoading(false);
         } catch (err) {
             showAlertError('', 'Não foi possível carregar os livros');
+            setRefreshing(false);
+
             setLoading(false);
         }
     }
-    
+
+    function refresh() {
+        setBooks([]);
+        setTotalPage(0);
+        setLoading(false);
+        setPage(oldState => {
+            setTimeout(loadBooks, 1000)
+            return 1;
+        });
+    }
+
+
     function loadMoreHandler() {
         if (page===totalPage) return;
 
@@ -66,14 +86,15 @@ export default function Home({ navigation }) {
             <Text style={styles.text}>Meus livros</Text>
             <FlatList 
                 data={books}
-                // style={{flex: 1}}
+                onRefresh={refresh}
+                refreshing={refreshing}
                 numColumns={2}
                 keyExtractor={(item, index) => item.id }
                 renderItem={({item}) => <CardBook data={item}/> }
                 ListFooterComponent={() =>
                     <TouchableOpacity onPress={loadMoreHandler} disabled={loading}>
                         {loading
-                        ? <ActivityIndicator color="black" size="small"/>
+                        ? <ActivityIndicator color="black" size="large"/>
                         : <Text style={styles.seeMoreBtn}>Ver mais</Text>}
                     </TouchableOpacity>}
             />
