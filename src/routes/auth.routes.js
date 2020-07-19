@@ -9,7 +9,7 @@ const AuthStack = createStackNavigator();
 export default function AuthRoutes(){
     return(
         <AuthStack.Navigator initialRouteName="Register" >
-            <AuthStack.Screen name="Register" component={Register}/>
+            <AuthStack.Screen name="Cadastro" component={Register}/>
             <AuthStack.Screen name="Login" component={Login}/>
         </AuthStack.Navigator>
     );

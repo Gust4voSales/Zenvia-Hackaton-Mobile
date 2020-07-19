@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
 
     function signOut() {
         AsyncStorage.clear().then(() => {
-            setUser(false);
+            setUser('');
         });
     }
 
