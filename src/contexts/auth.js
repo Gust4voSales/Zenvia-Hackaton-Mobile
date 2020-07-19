@@ -9,12 +9,12 @@ import api from '../services/api';
 const AuthContext = createContext({ signed: false, user: {}, loading: true }); //value types 
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(false);
+    const [user, setUser] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function loadStorageData() {
-            const storagedUser = await AsyncStorage.getItem('@ZenviaHack_user');
+            const storagedUser = await AsyncStorage.getItem('@ZenviaHack_userEmail');
             const storagedToken = await AsyncStorage.getItem('@ZenviaHack_userToken');
 
             if (storagedUser && storagedToken) {
@@ -33,22 +33,21 @@ export function AuthProvider({ children }) {
 
     async function signIn(email, password) {
         try {
-            const { data } = await api.post('/users/login', { email, password });
+            const { data } = await api.post('/users/login', { email, password }); //teste123
 
-            console.log(data);
-            // setUser(true);
-            // api.defaults.headers.authorization = `Bearer ${data.token}`;
+            setUser(email);
+            api.defaults.headers.authorization = `Bearer ${data.token}`;
 
             // //Save data on AsyncStorage
-            // try {
-            //     await AsyncStorage.multiSet([
-            //         ["@ZenviaHack_user", true],
-            //         ["@ZenviaHack_userToken", data.token],
-            //     ]);
-            // } catch (err) {
-            //     console.log(err);
-            //     console.log('Error trying to storage user data');
-            // }
+            try {
+                await AsyncStorage.multiSet([
+                    ["@ZenviaHack_userEmail", JSON.stringify(email)],
+                    ["@ZenviaHack_userToken", data.token],
+                ]);
+            } catch (err) {
+                console.log(err);
+                console.log('Error trying to storage user data');
+            }
 
         } catch (err) {
             // console.log(err.response);
@@ -69,6 +68,7 @@ export function AuthProvider({ children }) {
         try {
             const { data } = await api.post('/users/sign-up', { email, password });
 
+            console.log(data);
             // setUser(true);
             // api.defaults.headers.authorization = `Bearer ${data.token}`;
 
@@ -85,9 +85,11 @@ export function AuthProvider({ children }) {
         } catch (err) {
             if (err.response===undefined) 
                 showAlertError('Não foi possível realizar o cadastro', 'Erro ao tentar conectar com o servidor. Tente novamente');
-            else
-                showAlertError('Não foi possível realizar o cadastro', 'Erro na response?');
-                // return err.response.data.error;
+            else {
+                console.log(err.response);
+                showAlertError('Não foi possível realizar o cadastro', 'Utilize um email válido e senha com pelo menos 8 caracteres');
+
+            }
         }
     }
 
