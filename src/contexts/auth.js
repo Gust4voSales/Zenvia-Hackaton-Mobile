@@ -31,30 +31,31 @@ export function AuthProvider({ children }) {
         loadStorageData();
     }, []);
 
-    async function signIn(userName, password) {
+    async function signIn(email, password) {
         try {
-            const { data } = await api.post('/users/login', { userName, password });
+            const { data } = await api.post('/users/login', { email, password });
 
-            setUser(true);
-            api.defaults.headers.authorization = `Bearer ${data.token}`;
+            console.log(data);
+            // setUser(true);
+            // api.defaults.headers.authorization = `Bearer ${data.token}`;
 
-            //Save data on AsyncStorage
-            try {
-                await AsyncStorage.multiSet([
-                    ["@ZenviaHack_user", true],
-                    ["@ZenviaHack_userToken", data.token],
-                ]);
-            } catch (err) {
-                console.log(err);
-                console.log('Error trying to storage user data');
-            }
+            // //Save data on AsyncStorage
+            // try {
+            //     await AsyncStorage.multiSet([
+            //         ["@ZenviaHack_user", true],
+            //         ["@ZenviaHack_userToken", data.token],
+            //     ]);
+            // } catch (err) {
+            //     console.log(err);
+            //     console.log('Error trying to storage user data');
+            // }
 
         } catch (err) {
+            // console.log(err.response);
             if (err.response===undefined) 
                 showAlertError('Não foi possível realizar login', 'Erro ao tentar conectar com o servidor. Tente novamente');
             else
-                showAlertError('Não foi possível realizar login', 'Erro na resposta?');
-                // return err.response.data.error;
+                showAlertError('Não foi possível realizar login', 'Email ou senha incorretos');
         }
     }
 
@@ -64,9 +65,9 @@ export function AuthProvider({ children }) {
         });
     }
 
-    async function register(userName, password) {
+    async function register(email, password) {
         try {
-            const { data } = await api.post('/users/sign-up', { userName, password });
+            const { data } = await api.post('/users/sign-up', { email, password });
 
             // setUser(true);
             // api.defaults.headers.authorization = `Bearer ${data.token}`;
