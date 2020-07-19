@@ -1,13 +1,30 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { View, Text, StyleSheet, Switch, TextInput, TouchableOpacity } from 'react-native';
 import {Picker} from '@react-native-community/picker';
+
+import showAlertError from '../../components/AlertError';
+import api from '../../services/api';
 
 export default function EditBook({ navigation }) {
     const [nome, setNome] = useState('');
     const [autor, setTitle] = useState('');
     const [genero, setGenero] = useState('js');
+    const [generos, setGeneros] = useState([]);
     const [audioBook, setAudioBook] = useState(false);
 
+    useEffect(() => {
+        async function loadGenres() {   
+            try {
+                const { data } = await api.get('/generos');
+                setGeneros(data);
+                setGenero(data[0].id);
+            } catch (err) {
+                showAlertError('', 'Não foi possível carregar os gêneros');
+            }
+        }
+
+        loadGenres();
+    }, []);
 
     function registerBook() {
         console.log(genero);
@@ -29,8 +46,12 @@ export default function EditBook({ navigation }) {
                     style={{ height: 40, width: '100%', }}
                     onValueChange={(itemValue, itemIndex) => setGenero(itemValue)}
                 >
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
+                    {
+                        generos.length>0 
+                        ? generos.map((genero) => <Picker.Item label={genero.tipo} value={genero.id} key={genero.id}/>)
+                        : <Picker.Item label="Carregando" value="ficção"/>
+                    }
+                   
                 </Picker>
             </View>
             <View style={[styles.input, { paddingVertical: 6, paddingHorizontal: 5 }]}>
