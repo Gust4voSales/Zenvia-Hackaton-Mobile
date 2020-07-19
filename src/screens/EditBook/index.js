@@ -39,14 +39,14 @@ export default function EditBook({ navigation, route }) {
                         onFocus={() => {setTitleBorder(1)}}
                         onBlur={() => {setTitleBorder(0)}}
                         onChangeText={text => titleHandler(text)}
-                        style={[styles.text, { borderWidth: titleBorder }]}
+                        style={[styles.textInput, { borderWidth: titleBorder }]}
                         value={bookData.nome}
                     />
                 </View>
                 <View style={styles.infoField}>
                     <Text style={styles.textHeader}>Disponível em:</Text>
                     <TextInput 
-                        style={[styles.text, { borderWidth: linkBorder }]}
+                        style={[styles.textInput, { borderWidth: linkBorder }]}
                         onFocus={() => {setLinkBorder(1)}}
                         onBlur={() => {setLinkBorder(0)}}
                         onChangeText={text => linkHandler(text)}
@@ -60,7 +60,7 @@ export default function EditBook({ navigation, route }) {
                 <View style={styles.infoField}>
                     <Text style={styles.textHeader}>Descrição:</Text>
                     <TextInput 
-                        style={[styles.text, { borderWidth: descriptionBorder }]}
+                        style={[styles.textInput, { borderWidth: descriptionBorder }]}
                         onFocus={() => {setDescriptionBorder(1)}}
                         onBlur={() => {setDescriptionBorder(0)}}
                         onChangeText={text => descriptionHandler(text)}
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     infoField: {
         marginBottom: 20,
     },
-    text: {
+    textInput: {
         textAlign: 'left',
         fontSize: 15,
         paddingVertical: 0,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     btn: {
         paddingHorizontal: 20,
-        paddingVertical: 15,
+        paddingVertical: 10,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,

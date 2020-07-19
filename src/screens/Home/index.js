@@ -16,6 +16,9 @@ export default function Home({ navigation }) {
             <TouchableOpacity onPress={() => navigation.navigate('EditBook', { data: fakeData })}>
                 <Text>Edit Book</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('RegisterBook')}>
+                <Text>Registrar Book</Text>
+            </TouchableOpacity>
         </View>
     );
 }
