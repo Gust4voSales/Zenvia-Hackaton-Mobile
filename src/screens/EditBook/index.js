@@ -2,6 +2,9 @@ import React, { useState, } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import showAlertError from '../../components/AlertError';
+import api from '../../services/api';
+
 
 export default function EditBook({ navigation, route }) {
     const [bookData, setBookData] = useState(route.params.data);
@@ -25,6 +28,17 @@ export default function EditBook({ navigation, route }) {
         let dataTemp = {...bookData};
         dataTemp.sinopse = text;
         setBookData(dataTemp);
+    }
+
+    async function deleteHandler() {
+        try {
+            await api.delete(`/livros/${bookData.id}`);
+            navigation.goBack();
+        } catch (err) {
+            console.log(err.response);
+            console.log(bookData.id);
+            showAlertError('', 'Erro ao tentar deletar livro');
+        }
     }
 
     return(
@@ -70,7 +84,7 @@ export default function EditBook({ navigation, route }) {
                 </View>
 
                 <View style={styles.btnContainer}>
-                    <TouchableOpacity style={styles.btn} activeOpacity={.5}>
+                    <TouchableOpacity style={styles.btn} activeOpacity={.5} onPress={deleteHandler}>
                         <Text style={{color: '#8D06F6', fontWeight: 'bold' }}>Excluir livro</Text>
                     </TouchableOpacity>
 
