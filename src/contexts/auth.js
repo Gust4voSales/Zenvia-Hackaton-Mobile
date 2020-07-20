@@ -68,8 +68,8 @@ export function AuthProvider({ children }) {
         try {
             const { data } = await api.post('/users/sign-up', { email, password });
 
-            console.log(data);
-            // setUser(true);
+            // console.log(data);
+            // setUser(email);
             // api.defaults.headers.authorization = `Bearer ${data.token}`;
 
             //Save data on AsyncStorage

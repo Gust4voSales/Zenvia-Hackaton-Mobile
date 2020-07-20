@@ -14,11 +14,12 @@ export default function Register({ navigation }) {
             setLoading(true);
             await register(email, password);
             setLoading(false);
+            navigateToLogin();
         }
     }
 
     function navigateToLogin() {
-        navigation.navigate('Login');
+        navigation.navigate('Login', { email });
     }
 
     return(
@@ -38,6 +39,7 @@ export default function Register({ navigation }) {
                     style={styles.input}
                     placeholder="Senha"
                     underlineColorAndroid="#0129FA"
+                    secureTextEntry={true}
                     onChangeText={text => setPassword(text)}
                 />
             </View>

@@ -3,10 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet 
 import AuthContext from '../../contexts/auth';
 // import Button from '../../components/Button';
 
-export default function Login() {
+export default function Login({ route }) {
     let mounted;
     const { signIn } = useContext(AuthContext);
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(route.params.email);
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -29,6 +29,7 @@ export default function Login() {
             <TextInput 
                 style={styles.input}
                 placeholder="E-mail"
+                value={email}
                 underlineColorAndroid="#0129FA"
                 onChangeText={text => setEmail(text)}
             />
@@ -36,6 +37,7 @@ export default function Login() {
                 style={styles.input}
                 placeholder="Senha"
                 underlineColorAndroid="#0129FA"
+                secureTextEntry={true}
                 onChangeText={text => setPassword(text)}
             />
 
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         justifyContent: 'center',
         backgroundColor: '#0B1747',
-
+        marginTop: 70,
         alignItems: 'center',
     },
     textBtn: {

@@ -6,10 +6,12 @@ import showAlertError from '../../components/AlertError';
 import api from '../../services/api';
 
 export default function EditBook({ navigation }) {
-    const [nome, setNome] = useState('');
-    const [autor, setTitle] = useState('');
-    const [genero, setGenero] = useState('js');
     const [generos, setGeneros] = useState([]);
+    const [nome, setNome] = useState('');
+    const [isbn, setISBN] = useState('');
+    const [genero, setGenero] = useState('label');
+    const [link_venda, setLinkVenda] = useState('');
+    const [img_url, setImgUrl] = useState('');
     const [audioBook, setAudioBook] = useState(false);
 
     useEffect(() => {
@@ -26,8 +28,24 @@ export default function EditBook({ navigation }) {
         loadGenres();
     }, []);
 
-    function registerBook() {
-        console.log(genero);
+    async function registerBook() {
+        // console.log(genero);
+        try {
+            const bookData = {
+                nome,
+                isbn,
+                // genero,
+                link_venda,
+                img_url,
+                // audioBook,
+            }
+
+            const { data } = await api.post('/livros', bookData);
+            console.log(data);
+        } catch (err) {
+            console.log(err.response);
+            showAlertError('', 'Erro ao tentar cadastrar livro');
+        }
     }
 
     return(
@@ -35,10 +53,12 @@ export default function EditBook({ navigation }) {
             <TextInput 
                 style={styles.input}
                 placeholder="Título"
+                onChangeText={(text) => { setNome(text) }}
             />
             <TextInput 
                 style={styles.input}
-                placeholder="Autor"
+                placeholder="Código ISBN"
+                onChangeText={(text) => { setISBN(text) }}
             />
             <View style={[styles.input, { paddingVertical: 0 }]}>
                 <Picker
@@ -69,6 +89,13 @@ export default function EditBook({ navigation }) {
                 <TextInput 
                     style={styles.input}
                     placeholder="www.exemplo.com.br"
+                    onChangeText={(text) => { setLinkVenda(text) }}
+                />
+                <Text>URL da imagem: </Text>
+                <TextInput 
+                    style={styles.input}
+                    onChangeText={(text) => { setImgUrl(text) }}
+                    placeholder="www.imagem.jpg"
                 />
             </View>
 
