@@ -35,9 +35,24 @@ export default function EditBook({ navigation, route }) {
             await api.delete(`/livros/${bookData.id}`);
             navigation.goBack();
         } catch (err) {
-            console.log(err.response);
-            console.log(bookData.id);
             showAlertError('', 'Erro ao tentar deletar livro');
+        }
+    }
+
+    async function updateHandler() {
+        try {
+            await api.put(`/livros/${bookData.id}`, {
+                id: bookData.id,
+                nome: bookData.nome,
+                isbn: bookData.isbn,
+                sinopse: bookData.sinopse,
+                texto_especial: bookData.nome,
+                link_venda: bookData.link_venda,
+                img_url: bookData.img_url,
+            });
+        } catch (err) {
+            console.log(err.response);
+            showAlertError('', 'Erro ao tentar atualizar livro');
         }
     }
 
@@ -88,7 +103,7 @@ export default function EditBook({ navigation, route }) {
                         <Text style={{color: '#8D06F6', fontWeight: 'bold' }}>Excluir livro</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.btn, { backgroundColor: '#8D06F6' }]} activeOpacity={.7}>
+                    <TouchableOpacity style={[styles.btn, { backgroundColor: '#8D06F6' }]} activeOpacity={.7} onPress={updateHandler}>
                         <Text style={{color: 'white', fontWeight: 'bold' }}>Salvar alterações</Text>
                     </TouchableOpacity>
                 </View>
